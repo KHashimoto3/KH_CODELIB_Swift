@@ -8,12 +8,22 @@
 import UIKit
 
 class TimerSetViewController: UIViewController {
-
+    
     //エラー表示用
     var alertController: UIAlertController!
     
     //設定時間を表示する
     @IBOutlet weak var SetTime: UILabel!
+    
+    //プリセットの時間を表示する
+    @IBOutlet weak var preset1_view: UIButton!
+    @IBOutlet weak var preset2_view: UIButton!
+    @IBOutlet weak var preset3_view: UIButton!
+    
+    //プリセットの設定を格納するPrestTimeのインスタンスを作成
+    var preset=PresetTime()
+    var preset_array=[PresetTime]()
+    
     //時間設定用バッファ
     var timebuf=String()
     //リセット後フラグ
@@ -27,11 +37,11 @@ class TimerSetViewController: UIViewController {
     //値B（１の位）
     var numB=0
     
-    //時間を入れる
+    //設定された時間を入れる
     var hour=0
-    //分を入れる
+    //設定された分を入れる
     var min=0
-    //秒を入れる
+    //設定された秒を入れる
     var sec=0
     
     //soundFileクラスを実体化
@@ -40,8 +50,27 @@ class TimerSetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        preset.time=60
+        preset.disp_name="1分"
+        preset_array.append(preset)
+        
+        preset.time=30
+        preset.disp_name="30秒"
+        preset_array.append(preset)
+        
+        preset.time=120
+        preset.disp_name="2分"
+        preset_array.append(preset)
+        
+        //present1_viewに、プリセットの１つ目を表示
+        preset1_view.setTitle(preset_array[0].disp_name, for: .normal)
+        preset1_view.titleLabel?.numberOfLines=0
+        preset2_view.setTitle(preset_array[1].disp_name, for: .normal)
+        preset2_view.titleLabel?.numberOfLines=0
+        preset3_view.setTitle(preset_array[2].disp_name, for: .normal)
+        preset3_view.titleLabel?.numberOfLines=0
+        
     }
     
     //時間を設定する関数
@@ -94,7 +123,7 @@ class TimerSetViewController: UIViewController {
         }
         
         //オプションメロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "option", extentionName: "mp3")
         
         //現在の時間設定を取得
         timebuf=SetTime.text!
@@ -137,7 +166,7 @@ class TimerSetViewController: UIViewController {
         }
         
         //オプションメロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "option", extentionName: "mp3")
         
        
     }
@@ -176,7 +205,7 @@ class TimerSetViewController: UIViewController {
         }
         
         //オプションメロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "option", extentionName: "mp3")
     }
     
     //各数字ボタン
@@ -233,7 +262,7 @@ class TimerSetViewController: UIViewController {
         sec=0
         
         //リセットメロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "reset", extentionName: "mp3")
     }
     
     
@@ -246,7 +275,7 @@ class TimerSetViewController: UIViewController {
             print("現在入っている時間を表示します（設定画面）: "+String(hour)+"時間"+String(min)+"分"+String(sec)+"秒です。")
             
             //スタートメロディーを流す
-            soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+            soundFile.playSound(fileName: "start", extentionName: "mp3")
             
             self.performSegue(withIdentifier: "next", sender: nil)
             
@@ -273,7 +302,7 @@ class TimerSetViewController: UIViewController {
             sec=0
             
             //リセットメロディーを流す
-            soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+            soundFile.playSound(fileName: "reset", extentionName: "mp3")
             
         }
         
@@ -289,6 +318,57 @@ class TimerSetViewController: UIViewController {
             nextVC.time_sec=sec
         }
     }
+    
+    //プリセットボタンが押された時の動作
+    //プリセット1
+    
+    @IBAction func preset1(_ sender: Any) {
+        let sec_all=preset_array[0].time
+        hour=sec_all/3600
+        min=(sec_all-(3600*hour))/60
+        sec=(sec_all-(3600*hour))-(60*min)
+        
+        //カウントダウン画面に移る
+        print("現在入っている時間を表示します（設定画面）: "+String(hour)+"時間"+String(min)+"分"+String(sec)+"秒です。")
+        
+        //スタートメロディーを流す
+        soundFile.playSound(fileName: "start", extentionName: "mp3")
+        
+        self.performSegue(withIdentifier: "next", sender: nil)
+    }
+    //プリセット2
+    
+    @IBAction func preset2(_ sender: Any) {
+        let sec_all=preset_array[1].time
+        hour=sec_all/3600
+        min=(sec_all-(3600*hour))/60
+        sec=(sec_all-(3600*hour))-(60*min)
+        
+        //カウントダウン画面に移る
+        print("現在入っている時間を表示します（設定画面）: "+String(hour)+"時間"+String(min)+"分"+String(sec)+"秒です。")
+        
+        //スタートメロディーを流す
+        soundFile.playSound(fileName: "start", extentionName: "mp3")
+        
+        self.performSegue(withIdentifier: "next", sender: nil)
+    }
+    //プリセット3
+    
+    @IBAction func preset3(_ sender: Any) {
+        let sec_all=preset_array[2].time
+        hour=sec_all/3600
+        min=(sec_all-(3600*hour))/60
+        sec=(sec_all-(3600*hour))-(60*min)
+        
+        //カウントダウン画面に移る
+        print("現在入っている時間を表示します（設定画面）: "+String(hour)+"時間"+String(min)+"分"+String(sec)+"秒です。")
+        
+        //スタートメロディーを流す
+        soundFile.playSound(fileName: "start", extentionName: "mp3")
+        
+        self.performSegue(withIdentifier: "next", sender: nil)
+    }
+    
     
     //時間がどれか入っているかどうかを判定
     func check_zero(num1:Int,num2:Int,num3:Int)->Bool{
@@ -326,7 +406,7 @@ class TimerSetViewController: UIViewController {
         sec=0
         
         //リセットメロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "reset", extentionName: "mp3")
         
     }
 
