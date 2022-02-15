@@ -28,6 +28,9 @@ class TimerRunningViewController: UIViewController {
     //残り時間（秒数）を保持する
     var nokori_sec=Int()
     
+    //timeup画面の残り時間
+    var nokori_timeup=30
+    
     //フィードバックを表示する
     @IBOutlet weak var feedback: UILabel!
     
@@ -49,7 +52,7 @@ class TimerRunningViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        timeLabel.text="設定時間: "+String(time_hour)+"時間"+String(time_min)+"分"+String(time_sec)+"秒"
+        timeLabel.text="設定時間: "+String(format: "%02d", time_hour)+"時間"+String(format: "%02d", time_min)+"分"+String(format: "%02d", time_sec)+"秒"
         
         //値を設定
         h=time_hour
@@ -59,8 +62,7 @@ class TimerRunningViewController: UIViewController {
         nokori_sec=(time_hour*3600)+(time_min*60)+time_sec
         
         //残り時間を表示
-        nokori_time_label.text=String(h)+":"+String(m)+":"+String(s)
-        
+        nokori_time_label.text=String(format: "%02d", time_hour)+":"+String(format: "%02d", time_min)+":"+String(format: "%02d", time_sec)
         
         //無効なボタンを設定する
         one_min_button.isHidden=true
@@ -76,7 +78,7 @@ class TimerRunningViewController: UIViewController {
     //タイマーの秒ごとの繰り返し処理
     @objc func update(){
         if nokori_sec==1{
-            endtimer()
+            timeup()
         }
         //表示内容を更新
         if nokori_sec<60{   //１分未満
@@ -104,12 +106,12 @@ class TimerRunningViewController: UIViewController {
         }
         nokori_sec=nokori_sec-1
         //残り時間を表示
-        nokori_time_label.text=String(h)+":"+String(m)+":"+String(s)
+        nokori_time_label.text=String(format: "%02d", h)+":"+String(format: "%02d", m)+":"+String(format: "%02d", s)
         
     }
 
     //設定時間になったら
-    func endtimer(){
+    func timeup(){
         //終了を表示
         nokori_time_label.text="時間になりました！"
         print("終了しました")
@@ -117,14 +119,38 @@ class TimerRunningViewController: UIViewController {
         //タイマーを破棄
         self.timer?.invalidate()
         //終了メロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "finish", extentionName: "mp3")
         
+        //timeupタイマーの開始
+        self.timer=Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(TimerRunningViewController.timeup_update), userInfo: nil, repeats: true)
+        
+        /*//無効なボタンを設定する
+        one_min_button.isHidden=false
+        stop_button.isHidden=true
+        replay_button.isHidden=false
+        back_button.isHidden=false*/
+        
+    }
+    
+    @objc func timeup_update() {
+        if nokori_sec==1{
+            timeup_end();
+        }
+        nokori_sec=nokori_sec-1
+        //終了メロディーを流す
+        soundFile.playSound(fileName: "finish", extentionName: "mp3")
+    }
+    
+    func timeup_end() {
+        //タイマーを破棄
+        self.timer?.invalidate()
+        nokori_timeup=30
         //無効なボタンを設定する
+        continue_button.isHidden=true
         one_min_button.isHidden=false
         stop_button.isHidden=true
         replay_button.isHidden=false
         back_button.isHidden=false
-        
     }
     
     //もう１分ボタン
@@ -137,7 +163,7 @@ class TimerRunningViewController: UIViewController {
         nokori_sec=1*60
                 
         //残り時間を表示
-        nokori_time_label.text=String(h)+":"+String(m)+":"+String(s)
+        nokori_time_label.text=String(format: "%02d", h)+":"+String(format: "%02d", m)+":"+String(format: "%02d", s)
                 
         feedback.text="もう１分追加しました。"
                 
@@ -145,7 +171,7 @@ class TimerRunningViewController: UIViewController {
         self.timer=Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(TimerRunningViewController.update), userInfo: nil, repeats: true)
                 
         //もう一度メロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "replay", extentionName: "mp3")
                 
         //無効なボタンを設定する
         one_min_button.isHidden=true
@@ -158,17 +184,29 @@ class TimerRunningViewController: UIViewController {
     
     //止めるボタン
     @IBAction func stop(_ sender: Any) {
-        feedback.text="タイマーを止めました。"
-        //タイマーを破棄
-        self.timer?.invalidate()
-        //停止メロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
-        //無効なボタンを設定する
-        one_min_button.isHidden=true
-        stop_button.isHidden=true
-        continue_button.isHidden=false
-        replay_button.isHidden=false
-        back_button.isHidden=false
+        if nokori_sec==1{
+            //タイマーを破棄
+            self.timer?.invalidate()
+            nokori_timeup=30
+            //無効なボタンを設定する
+            continue_button.isHidden=true
+            one_min_button.isHidden=false
+            stop_button.isHidden=true
+            replay_button.isHidden=false
+            back_button.isHidden=false
+        }else{
+            feedback.text="タイマーを止めました。"
+            //タイマーを破棄
+            self.timer?.invalidate()
+            //停止メロディーを流す
+            soundFile.playSound(fileName: "stop", extentionName: "mp3")
+            //無効なボタンを設定する
+            one_min_button.isHidden=true
+            stop_button.isHidden=true
+            continue_button.isHidden=false
+            replay_button.isHidden=false
+            back_button.isHidden=false
+        }
     }
     
     //続けるボタン
@@ -177,7 +215,7 @@ class TimerRunningViewController: UIViewController {
         //タイマーの開始
         self.timer=Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(TimerRunningViewController.update), userInfo: nil, repeats: true)
         //続けるメロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "start", extentionName: "mp3")
         
         //無効なボタンを設定
         one_min_button.isHidden=true
@@ -197,15 +235,15 @@ class TimerRunningViewController: UIViewController {
         nokori_sec=(time_hour*3600)+(time_min*60)+time_sec
         
         //残り時間を表示
-        nokori_time_label.text=String(h)+":"+String(m)+":"+String(s)
-        
+        nokori_time_label.text=String(format: "%02d", h)+":"+String(format: "%02d", m)+":"+String(format: "%02d", s)
+    
         feedback.text="設定時間でもう一度やります。"
         
         //タイマーの開始
         self.timer=Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(TimerRunningViewController.update), userInfo: nil, repeats: true)
         
         //もう一度メロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "replay", extentionName: "mp3")
         
         //無効なボタンを設定する
         one_min_button.isHidden=true
@@ -218,7 +256,7 @@ class TimerRunningViewController: UIViewController {
     //もどるボタン
     @IBAction func reset(_ sender: Any) {
         //リセットメロディーを流す
-        soundFile.playSound(fileName: "ファイル名", extentionName: "mp3")
+        soundFile.playSound(fileName: "reset", extentionName: "mp3")
         self.dismiss(animated: true, completion: nil)
     }
 
