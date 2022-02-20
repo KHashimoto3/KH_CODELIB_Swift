@@ -133,7 +133,7 @@ class TimerRunningViewController: UIViewController {
     }
     
     @objc func timeup_update() {
-        if nokori_sec==1{
+        if nokori_sec==0{
             timeup_end();
         }
         nokori_sec=nokori_sec-1
@@ -184,7 +184,7 @@ class TimerRunningViewController: UIViewController {
     
     //止めるボタン
     @IBAction func stop(_ sender: Any) {
-        if nokori_sec==1{
+        if nokori_sec==0{
             //タイマーを破棄
             self.timer?.invalidate()
             nokori_timeup=30

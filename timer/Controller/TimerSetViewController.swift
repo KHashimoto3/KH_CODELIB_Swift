@@ -16,9 +16,23 @@ class TimerSetViewController: UIViewController {
     @IBOutlet weak var SetTime: UILabel!
     
     //プリセットの時間を表示する
-    @IBOutlet weak var preset1_view: UIButton!
-    @IBOutlet weak var preset2_view: UIButton!
-    @IBOutlet weak var preset3_view: UIButton!
+    
+    @IBOutlet weak var preset1_view: UILabel!
+    
+    @IBOutlet weak var preset2_view: UILabel!
+    
+    @IBOutlet weak var preset3_view: UILabel!
+    
+    //単位ボタン
+    @IBOutlet weak var setHour_view: UIButton!
+    @IBOutlet weak var setMin_view: UIButton!
+    @IBOutlet weak var setSec_view: UIButton!
+    
+    //リセットボタン
+    @IBOutlet weak var reset_view: UIButton!
+    //スタートボタン
+    @IBOutlet weak var start_view: UIButton!
+    
     
     //プリセットの設定を格納するPrestTimeのインスタンスを作成
     var preset=PresetTime()
@@ -51,6 +65,39 @@ class TimerSetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
+        //ボタンのデザイン（時間）
+        setHour_view.layer.shadowColor = UIColor.black.cgColor //　影の色
+        setHour_view.layer.shadowOpacity = 0.3  //影の濃さ
+        setHour_view.layer.shadowRadius = 5.0 // 影のぼかし量
+        setHour_view.layer.shadowOffset = CGSize(width: 5.0, height: 5.0) // 影の方向
+        
+        //ボタンのデザイン（分）
+        setMin_view.layer.shadowColor = UIColor.black.cgColor //　影の色
+        setMin_view.layer.shadowOpacity = 0.3  //影の濃さ
+        setMin_view.layer.shadowRadius = 5.0 // 影のぼかし量
+        setMin_view.layer.shadowOffset = CGSize(width: 5.0, height: 5.0) // 影の方向
+        
+        //ボタンのデザイン（分）
+        setSec_view.layer.shadowColor = UIColor.black.cgColor //　影の色
+        setSec_view.layer.shadowOpacity = 0.3  //影の濃さ
+        setSec_view.layer.shadowRadius = 5.0 // 影のぼかし量
+        setSec_view.layer.shadowOffset = CGSize(width: 5.0, height: 5.0) // 影の方向
+        
+        //リセットボタンのデザイン
+        reset_view.layer.shadowColor = UIColor.black.cgColor //　影の色
+        reset_view.layer.shadowOpacity = 0.3  //影の濃さ
+        reset_view.layer.shadowRadius = 5.0 // 影のぼかし量
+        reset_view.layer.shadowOffset = CGSize(width: 5.0, height: 5.0) // 影の方向
+        
+        //スタートボタンのデザイン
+        start_view.layer.shadowColor = UIColor.black.cgColor //　影の色
+        start_view.layer.shadowOpacity = 0.3  //影の濃さ
+        start_view.layer.shadowRadius = 5.0 // 影のぼかし量
+        start_view.layer.shadowOffset = CGSize(width: 5.0, height: 5.0) // 影の方向
+        
+        
         preset.time=60
         preset.disp_name="1分"
         preset_array.append(preset)
@@ -64,12 +111,14 @@ class TimerSetViewController: UIViewController {
         preset_array.append(preset)
         
         //present1_viewに、プリセットの１つ目を表示
-        preset1_view.setTitle(preset_array[0].disp_name, for: .normal)
-        preset1_view.titleLabel?.numberOfLines=0
+        preset1_view.text=preset_array[0].disp_name
+        preset2_view.text=preset_array[1].disp_name
+        preset3_view.text=preset_array[2].disp_name
+        /*preset1_view.titleLabel?.numberOfLines=0
         preset2_view.setTitle(preset_array[1].disp_name, for: .normal)
         preset2_view.titleLabel?.numberOfLines=0
         preset3_view.setTitle(preset_array[2].disp_name, for: .normal)
-        preset3_view.titleLabel?.numberOfLines=0
+        preset3_view.titleLabel?.numberOfLines=0*/
         
     }
     
@@ -328,6 +377,8 @@ class TimerSetViewController: UIViewController {
         min=(sec_all-(3600*hour))/60
         sec=(sec_all-(3600*hour))-(60*min)
         
+        
+        SetTime.text=preset_array[0].disp_name
         //カウントダウン画面に移る
         print("現在入っている時間を表示します（設定画面）: "+String(hour)+"時間"+String(min)+"分"+String(sec)+"秒です。")
         
@@ -344,6 +395,7 @@ class TimerSetViewController: UIViewController {
         min=(sec_all-(3600*hour))/60
         sec=(sec_all-(3600*hour))-(60*min)
         
+        SetTime.text=preset_array[1].disp_name
         //カウントダウン画面に移る
         print("現在入っている時間を表示します（設定画面）: "+String(hour)+"時間"+String(min)+"分"+String(sec)+"秒です。")
         
@@ -360,6 +412,7 @@ class TimerSetViewController: UIViewController {
         min=(sec_all-(3600*hour))/60
         sec=(sec_all-(3600*hour))-(60*min)
         
+        SetTime.text=preset_array[2].disp_name
         //カウントダウン画面に移る
         print("現在入っている時間を表示します（設定画面）: "+String(hour)+"時間"+String(min)+"分"+String(sec)+"秒です。")
         
