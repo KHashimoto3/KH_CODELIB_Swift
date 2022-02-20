@@ -8,6 +8,6 @@ timerフォルダ・・・数字ボタンとプリセット機能を組み合わ
 * 数字キーと「時間」・「分」・「秒」ボタンを使って、カスタムの時間を設定する
 
 # ファイルの構成
-※　Controllerフォルダ：各viewControllerへのプログラムを格納します。  
+* Controllerフォルダ：各viewControllerへのプログラムを格納します。  
 このフォルダには、時間設定を行う画面のTimerSetViewContollerと、タイマー実行画面のTimerRunningViewControllerの２つがあります。
-※ Modelフォルダ、音の制御に使用する処理を定義したSoundFile.swiftと、時間のプリセットを管理（格納）するオブジェクトを扱うPreset.swiftの２種類があります。
+* Modelフォルダ、音の制御に使用する処理を定義したSoundFile.swiftと、時間のプリセットを管理（格納）するオブジェクトを扱うPreset.swiftの２種類があります。
