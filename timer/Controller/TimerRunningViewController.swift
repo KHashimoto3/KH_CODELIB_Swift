@@ -133,10 +133,10 @@ class TimerRunningViewController: UIViewController {
     }
     
     @objc func timeup_update() {
-        if nokori_sec==0{
+        if nokori_timeup==0{
             timeup_end();
         }
-        nokori_sec=nokori_sec-1
+        nokori_timeup=nokori_timeup-1
         //終了メロディーを流す
         soundFile.playSound(fileName: "finish", extentionName: "mp3")
     }
