@@ -9,6 +9,9 @@ import UIKit
 
 class TimerSetViewController: UIViewController {
     
+    //ナビゲーションバーのボタン
+    var show_preset_button: UIBarButtonItem!
+    
     //エラー表示用
     var alertController: UIAlertController!
     
@@ -65,6 +68,11 @@ class TimerSetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //プリセット一覧のボタン
+        show_preset_button=UIBarButtonItem(title: "プリセット", style: .done, target: self, action: #selector(show_preset_list(_:)))
+        //ナビゲーションバーの右側にボタンを追加
+        self.navigationItem.rightBarButtonItem=show_preset_button
+        //ナビゲーションバーの下に影
         
         
         //ボタンのデザイン（時間）
@@ -97,7 +105,7 @@ class TimerSetViewController: UIViewController {
         start_view.layer.shadowRadius = 5.0 // 影のぼかし量
         start_view.layer.shadowOffset = CGSize(width: 5.0, height: 5.0) // 影の方向
         
-        
+        //仮のプリセットを設定
         preset.time=60
         preset.disp_name="1分"
         preset_array.append(preset)
@@ -314,6 +322,21 @@ class TimerSetViewController: UIViewController {
         soundFile.playSound(fileName: "reset", extentionName: "mp3")
     }
     
+    //segue（next）遷移時に渡す値を設定
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier=="next"{
+            let nextVC=segue.destination as! TimerRunningViewController
+            nextVC.time_hour=hour
+            nextVC.time_min=min
+            nextVC.time_sec=sec
+        }else if segue.identifier=="show_preset_list"{
+            let nextVC=segue.destination as! PresetListViewController
+            //PresetTimerViewのpresetarrayに要素を渡す
+            for preset in preset_array {
+                nextVC.preset_array.append(preset)
+            }
+        }
+    }
     
     //スタートボタン
     @IBAction func start(_ sender: Any) {
@@ -356,16 +379,6 @@ class TimerSetViewController: UIViewController {
         }
         
         
-    }
-    
-    //segue（next）遷移時に渡す値を設定
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier=="next"{
-            let nextVC=segue.destination as! TimerRunningViewController
-            nextVC.time_hour=hour
-            nextVC.time_min=min
-            nextVC.time_sec=sec
-        }
     }
     
     //プリセットボタンが押された時の動作
@@ -422,6 +435,10 @@ class TimerSetViewController: UIViewController {
         self.performSegue(withIdentifier: "next", sender: nil)
     }
     
+    //プリセットリストの表示
+    @objc func show_preset_list(_ sender:UIBarButtonItem){
+        self.performSegue(withIdentifier: "show_preset_list", sender: nil)
+    }
     
     //時間がどれか入っているかどうかを判定
     func check_zero(num1:Int,num2:Int,num3:Int)->Bool{
