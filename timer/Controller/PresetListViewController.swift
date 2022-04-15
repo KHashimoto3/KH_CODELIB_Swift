@@ -60,7 +60,6 @@ class PresetListViewController: UIViewController,UITableViewDelegate,UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let nextVC=storyboard?.instantiateViewController(withIdentifier: "change_preset")as! ChangePresetViewController
         
-        print(preset_array[indexPath.row].disp_name)
         nextVC.disp_name_str=preset_array[indexPath.row].disp_name
         
         //時間表示のための変数
